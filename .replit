@@ -20,3 +20,15 @@ localPort = 5000
 [[ports]]
 localPort = 8000
 externalPort = 80
+
+[workflows]
+runButton = "Run Flask App"
+
+[[workflows.workflow]]
+name = "Run Flask App"
+author = 32591584
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd quiz_master-vi && python main.py"

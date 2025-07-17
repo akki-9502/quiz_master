@@ -2,4 +2,4 @@ Flask
 Flask-SQLAlchemy
 jinja2
 SQLAlchemy
-
+gunicorn

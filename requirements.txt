@@ -1,6 +1,11 @@
 Flask
 Flask-SQLAlchemy
-jinja2
 SQLAlchemy
-gunicorn
+jinja2
 pandas
+python-docx
+PyPDF2
+gunicorn
+Werkzeug
+itsdangerous
+click

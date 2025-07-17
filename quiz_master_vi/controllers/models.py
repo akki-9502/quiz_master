@@ -1,4 +1,4 @@
-from .database import db
+from quiz_master_vi.controllers.database import db   # ✅ Absolute import — reliable in all environments
 class User(db.Model):
     __tablename__= 'user'
     uid=db.Column(db.Integer,autoincrement=True,primary_key=True,nullable=False)

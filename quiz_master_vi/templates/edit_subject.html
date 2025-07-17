@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Subject</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Edit Subject</h2>
+        <form action="/edit_subject/{{ subject.subject_id }}" method="POST">
+            <div class="mb-3">
+                <label for="subject_name" class="form-label">Subject Name:</label>
+                <input type="text" class="form-control" id="subject_name" name="subject_name" value="{{ subject.subject_name }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Description:</label>
+                <textarea class="form-control" id="description" name="description" rows="5" required>{{ subject.description }}</textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+            <a href="/admin_dashboard" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</body>
+</html>

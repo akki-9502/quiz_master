@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<style>
+    button {
+      
+        width: max-content;
+        height: 50px;
+        padding: 10px;
+        background-color: #2b0f0f; 
+        color: white;
+        border: none;
+        margin:0 2px;
+        font-size: 16px;
+        cursor: pointer;
+        text-align: center;
+    }
+    a{
+        width: max-content;
+        height: 50px;
+    }
+    a button {
+       
+        text-decoration: none;
+        color: white;
+    }
+    h3 {
+        color: #333;
+    }
+    ol {
+        padding-left: 20px;
+    }
+    label {
+        display: block;
+        margin-bottom: 10px;
+    }
+    .correct {
+        color: green;
+        font-weight: bold;
+    }
+    .incorrect {
+        color: red;
+        font-weight: bold;
+    }
+    h2
+    {
+        color:navy;
+    }
+    canvas {
+        margin: 20px auto;
+        display: block;
+    }
+    .submitbutton
+    {
+        text-align: center;
+        position: fixed; 
+        bottom: 20px; 
+        right: 100px; 
+        
+       
+        padding: 10px 20px; 
+        border: none; 
+        border-radius: 4px; 
+        cursor: pointer; 
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0); 
+        width: fit-content;
+        height:fit-content;
+        display: flex;
+        flex-direction: row;
+    }
+
+</style>
+<body>
+    <div id="main" class="fade-in">
+        <div class="score-display">
+            <h2>🎯 Quiz Performance</h2>
+            <div style="font-size: 3rem; margin: 20px 0;">{{ score }} / {{ total }}</div>
+            <div style="font-size: 1.2rem;">
+                {% set percentage = (score / total * 100) | round %}
+                {% if percentage >= 80 %}
+                    🌟 Excellent! You scored {{ percentage }}%
+                {% elif percentage >= 60 %}
+                    👍 Good job! You scored {{ percentage }}%
+                {% else %}
+                    💪 Keep practicing! You scored {{ percentage }}%
+                {% endif %}
+            </div>
+        </div>
+        <div class="text-center">
+            <canvas id="quizChart" width="250px" height="250px"></canvas>
+        </div>
+    <br>
+    {% if questions %}
+        <ol>
+        {% for question in questions %}
+            <li>
+                <h3>{{ question.question }}</h3>
+                
+                {% set user_response = quizresponses | selectattr('questionid', 'equalto', question.qid) | map(attribute='optionid') | first %}
+                {% for option in options %}
+                    {% if option.question_id == question.qid %}
+                        <label>
+                            <input type="radio" 
+                                   name="question_{{ question.qid }}" 
+                                   value="{{ option.option_id }}" 
+                                   disabled
+                                   {% if user_response == option.option_id %} checked {% endif %}>
+                            {{ option.option }}
+                            {% if question.answer == option.option_id %}
+                                <span class="correct">(Correct)</span>
+                            {% elif user_response == option.option_id and question.answer!=option.option_id%}
+                                <span class="incorrect">(Your Choice)</span>
+                            {% endif %}
+                        </label>
+                    {% endif %}
+                {% endfor %}
+            </li>
+        {% endfor %}
+        </ol>
+    {% else %}
+        <p>No questions found.</p>
+    {% endif %}
+    <div class="submitbutton">
+    
+        <a href="{{ url_for('livequiz') }}"><button>Back</button></a>
+   
+   
+        <a href="{{ url_for(dynamic_name2) }}"><button>{{ dynamic_name3 }}</button></a>
+   </div>
+    <script>
+        const ctx = document.getElementById('quizChart').getContext('2d');
+        const correct = {{ score }};
+        const incorrect = {{ total - score }};
+        const data = {
+            labels: ['Correct', 'Incorrect'],
+            datasets: [{
+                label: 'Quiz Performance',
+                data: [correct, incorrect],
+                backgroundColor: ['#4CAF50', '#F44336'],
+                borderColor: ['#388E3C', '#D32F2F'],
+                borderWidth: 1
+            }]
+        };
+        new Chart(ctx, {
+            type: 'pie',
+            data: data,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+```{% if questions %}
+        <ol>
+        {% for question in questions %}
+            <li>
+                <h3>{{ question.question }}</h3>
+                
+                {% set user_response = quizresponses | selectattr('questionid', 'equalto', question.qid) | map(attribute='optionid') | first %}
+                {% for option in options %}
+                    {% if option.question_id == question.qid %}
+                        <label>
+                            <input type="radio" 
+                                   name="question_{{ question.qid }}" 
+                                   value="{{ option.option_id }}" 
+                                   disabled
+                                   {% if user_response == option.option_id %} checked {% endif %}>
+                            {{ option.option }}
+                            {% if question.answer == option.option_id %}
+                                <span class="correct">(Correct)</span>
+                            {% elif user_response == option.option_id and question.answer!=option.option_id%}
+                                <span class="incorrect">(Your Choice)</span>
+                            {% endif %}
+                        </label>
+                    {% endif %}
+                {% endfor %}
+            </li>
+        {% endfor %}
+        </ol>
+    {% else %}
+        <p>No questions found.</p>
+    {% endif %}
+    <div class="submitbutton">
+    
+        <a href="{{ url_for('livequiz') }}"><button>Back</button></a>
+   
+   
+        <a href="{{ url_for(dynamic_name2) }}"><button>{{ dynamic_name3 }}</button></a>
+   </div>
+    <script>
+        const ctx = document.getElementById('quizChart').getContext('2d');
+        const correct = {{ score }};
+        const incorrect = {{ total - score }};
+        const data = {
+            labels: ['Correct', 'Incorrect'],
+            datasets: [{
+                label: 'Quiz Performance',
+                data: [correct, incorrect],
+                backgroundColor: ['#4CAF50', '#F44336'],
+                borderColor: ['#388E3C', '#D32F2F'],
+                borderWidth: 1
+            }]
+        };
+        new Chart(ctx, {
+            type: 'pie',
+            data: data,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

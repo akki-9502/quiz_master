@@ -1,0 +1,18 @@
+# Ignore Windows system files
+Thumbs.db
+.DS_Store
+
+# Ignore node_modules (for Node.js projects)
+node_modules/
+
+# Ignore Python cache files
+__pycache__/
+*.pyc
+
+# Ignore log files
+*.log
+logs/
+
+# Ignore environment files
+.env
+config.json

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Chapter</title>
+</head>
+<body>
+    <h2>Register Chapter</h2>
+    
+    <form action="add_chapter" method="POST">
+        <label>chapter_name:</label>
+        <input type="text" name="chapter_name" required><br><br>
+
+        <label>description:</label>
+        <textarea name="description"></textarea><br><br>
+
+        <label>Select_Subject:</label> 
+        <select name="Select_subject" required>
+            <option value="">-- select_subject --</option>
+            {% for subject in subjects %}
+                <option value="{{ subject.subject_id }}">{{ subject.subject_name }}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <button type="submit">Register Chapter</button>
+    </form>
+
+    <h3>Available Subjects</h3>
+    <ul>
+        {% for subject in subjects %}
+            <li>{{ subject.subject_id }} - {{ subject.subject_name }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+<style>
+    .nav123
+    {
+        display: flex;
+        flex-direction: row;
+    }
+    .navbar{
+        margin-top: 20px;
+
+    }
+    .nav-item
+    {
+        padding-left: 10px;
+        padding-right: 20px;
+    }
+    .cl1
+    {
+      margin-left: 75%;
+      border: rgb(169, 169, 169) 1px solid;
+      border-radius: 10%;
+    }
+    .cl2
+    {
+      min-width: 200px;
+    }
+    li{
+      min-width: max-content;
+    }
+    #myBarChart{
+      width: 300px !important;  
+      height: 300px !important; 
+      margin-left: 150px;
+  }
+  #myBarChart2{
+    width: 300px !important;  
+    height: 300px !important; 
+    margin-left: 150px;
+}
+  .charts
+  {
+
+    display: flex;
+    flex-direction: row;
+  }
+  canvas{
+    width:350px;
+  }
+  @media screen and (max-width: 1000px) 
+  {
+    .cl1
+    {
+      margin-left: 0%;
+      max-width: 300px;
+      width: 100px;
+    }
+  }
+
+</style>
+<body>
+<header>
+  <div id="canvas">
+     <div class="container">
+      <div class="card text-center">
+        <div class="card-header">
+          <ul class="nav nav-tabs card-header-tabs">
+            <li class="nav-item">
+              <a class="nav-link " href="/user">home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/livequiz">Livequiz</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/student_academic_details">score</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/logout">logout</a>
+          </li>
+          </ul>
+          <form class="user-search" action="{{ url_for('user_search') }}" method="GET">
+            <input type="text" name="query" placeholder="Search...">
+            <select name="type">
+              <option value="subjects">Subjects</option>
+              <option value="quizzes">Quizzes</option>
+            </select>
+            <button type="submit">Search</button>
+          </form>
+      </div>
+  </div>
+</header>
+
+  <h1>{{message}}</h1>
+
+  <!-- Flash Messages -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  <div>
+      {% for category, message in messages %}
+      <div class="alert alert-{{ category }}" role="alert">
+          {{ message }}
+      </div>
+      {% endfor %}
+  </div>
+  {% endif %}
+  {% endwith %}
+
+<!-- DEBUG OUTPUT (temporary - remove after testing) -->
+<div style="background: #f8f9fa; padding: 15px; margin-bottom: 20px; border: 1px dashed #ccc;">
+  <h5>Debug Data</h5>
+  <table class="table table-bordered table-sm mb-3">
+    <thead>
+      
+    </thead>
+    <tbody>
+      {% for count in subjectcount %}
+        <td>
+          {# Find the matching average for this subject #}
+          {% set avg = None %}
+          {% for mark in subjectmarks %}
+            {% if mark.subject_name == count.subject_name %}
+              {% set avg = mark.avg %}
+            {% endif %}
+          {% endfor %}
+          {{ avg if avg is not none else '-' }}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% if quizdetails and quizdetails[0] %}
+  <div>
+    <strong>First Quiz Detail:</strong>
+    <table class="table table-bordered table-sm">
+      <thead>
+        <tr>
+          <th>Quiz ID</th>
+          <th>Chapter</th>
+          <th>Date</th>
+          <th>Duration</th>
+          <th>Score</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{ quizdetails[0].quizid }}</td>
+          <td>{{ quizdetails[0].chapter_name }}</td>
+          <td>{{ quizdetails[0].quiz_date }}</td>
+          <td>{{ quizdetails[0].duration }}</td>
+          <td>{{ quizdetails[0].score }}</td>
+          <td>{{ quizdetails[0].total }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+</div>
+
+    {% if quizdetails %}
+    <div class="col-md-8">
+        <h3>Quiz Performance</h3>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Quiz ID</th>
+                    <th>Chapter</th>
+                    <th>Date</th>
+                    <th>Duration</th>
+                    <th>Score</th>
+                    <th>Total</th>
+                    <th>Percentage</th>
+                </tr>
+            </thead>
+  <tbody>
+ {% for quizdetail in quizdetails %}
+ <tr>
+  <td>{{quizdetail.quizid}} </td>
+  <td> {{quizdetail.chapter_name}} </td>
+  <td>{{quizdetail.quiz_date}} </td>
+  <td>{{quizdetail.duration}} minutes </td>
+  <td>{{quizdetail.score}}/{{quizdetail.total}} </td>
+ </tr>
+{% endfor %}
+</tbody>
+{% else %}
+No quizzes attempted till now.
+
+{% endif %}
+
+</ul>
+<div class="charts" style="margin-bottom: 30px;">
+  <canvas id="myBarChart"></canvas>
+  <canvas id="myBarChart2"></canvas>
+</div>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+      const subjectcount = {{ subjectcount | tojson }}; 
+      const subjectmarks = {{ subjectmarks | tojson }}; 
+
+      // Check if charts exist and data is available
+      const chart1 = document.getElementById('myBarChart');
+      const chart2 = document.getElementById('myBarChart2');
+
+      if (!chart1 || !chart2 || !subjectcount || !subjectmarks) {
+          console.log('Charts or data not available');
+          return;
+      }
+
+      const labels = subjectcount.map(item => item.subject_name);
+      const dataValues = subjectcount.map(item => item.count);
+      const labels2 = subjectmarks.map(item => item.subject_name);
+      const dataValues2 = subjectmarks.map(item => item.avg);
+
+      const ctx1 = chart1.getContext('2d');
+      const ctx2 = chart2.getContext('2d');
+
+      const data = {
+          labels: labels,  
+          datasets: [{
+              label: 'Quizzes attempted subject-wise',
+              data: dataValues,  
+              backgroundColor: [
+                  '#8C2C0E',
+                  '#D85128',
+                  '#F3D4B5',
+                  '##00668E',
+                  '#8E44AD'
+              ],  
+              borderColor: '#000',
+              borderWidth: 1
+          }]
+      };
+      const data2= {
+        labels: labels2,  
+        datasets: [{
+            label: 'Average marks subject-wise',
+            data: dataValues2,  
+            backgroundColor: [
+                '#8C2C0E',
+                '#D85128',
+                '#F3D4B5',
+                '##00668E',
+                '#8E44AD'
+            ],  
+            borderColor: '#000',
+            borderWidth: 1
+        }]
+    };
+      new Chart(ctx1, {
+          type: 'bar',
+          data: data,
+          options: {
+              responsive: true,
+              plugins: {
+                  legend: {
+                      position: 'bottom',
+                      labels: {
+                        font: {
+                            size: 12
+                        }}
+                  },
+                  tooltip: {
+                      enabled: true,
+                      backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                      titleFont: {
+                          size: 16
+                      },
+                      bodyFont: {
+                          size: 14
+                      },
+
+                  }
+              },
+              scales: {
+                  x: {
+                      beginAtZero: true,
+                      ticks: {
+                        font: {
+                            size: 18
+                        }
+                    },
+                    grid: {
+                      color: "rgba(0,0,0,0.1)", 
+                      backgroundColor: "rgba(255, 255, 255, 0.5)" }
+                  },
+                  y: {
+                      beginAtZero: true,
+                      ticks: {
+                        font: {
+                            size: 18
+                        }
+                    },
+                    grid: {
+                      color: "rgba(0,0,0,0.1)", 
+                      backgroundColor: "rgba(255, 255, 255, 0.5)" }
+                  }
+              }
+          }
+      });
+      new Chart(ctx2, {
+        type: 'bar',
+        data: data2,
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                      font: {
+                          size: 12
+                      }}
+                },
+                tooltip: {
+                    enabled: true,
+                    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                    titleFont: {
+                        size: 16
+                    },
+                    bodyFont: {
+                        size: 14
+                    },
+
+                }
+            },
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    ticks: {
+                      font: {
+                          size: 18
+                      }
+                  },
+                  grid: {
+                    color: "rgba(0,0,0,0.1)", 
+                    backgroundColor: "rgba(255, 255, 255, 0.5)" }
+                },
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                      font: {
+                          size: 18
+                      }
+                  },
+                  grid: {
+                    color: "rgba(0,0,0,0.1)", 
+                    backgroundColor: "rgba(255, 255, 255, 0.5)" 
+                }}
+            }
+        }
+    });
+  });
+</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>

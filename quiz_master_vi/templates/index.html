@@ -1,0 +1,226 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Quizmaster</title>
+        <link rel="stylesheet" href="/static/enhanced_style.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <style>
+            .hero-section {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .hero-section::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><polygon fill="%23ffffff08" points="0,0 1000,300 1000,1000 0,700"/><polygon fill="%23ffffff05" points="0,300 1000,100 1000,400 0,600"/></svg>');
+                background-size: cover;
+            }
+            
+            .welcome-container {
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(20px);
+                border-radius: 30px;
+                padding: 50px;
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+                text-align: center;
+                position: relative;
+                z-index: 1;
+                max-width: 600px;
+                margin: 20px;
+                border: 2px solid rgba(255, 255, 255, 0.3);
+            }
+            
+            .quiz-icon {
+                font-size: 4rem;
+                background: linear-gradient(45deg, #667eea, #764ba2);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                margin-bottom: 20px;
+                display: block;
+            }
+            
+            .welcome-title {
+                color: #667eea;
+                font-size: 2.8rem;
+                font-weight: 700;
+                margin-bottom: 15px;
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+                background: linear-gradient(45deg, #667eea, #764ba2);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }
+            
+            .welcome-subtitle {
+                color: #666;
+                font-size: 1.2rem;
+                margin-bottom: 40px;
+                line-height: 1.6;
+            }
+            
+            .login-options {
+                display: flex;
+                gap: 20px;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            
+            .login-btn {
+                background: linear-gradient(45deg, #667eea, #764ba2);
+                color: white;
+                border: none;
+                border-radius: 25px;
+                padding: 15px 35px;
+                font-size: 1.1rem;
+                font-weight: 600;
+                text-decoration: none;
+                display: inline-flex;
+                align-items: center;
+                gap: 10px;
+                transition: all 0.3s ease;
+                box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+            
+            .login-btn:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+                color: white;
+                text-decoration: none;
+            }
+            
+            .login-btn.admin-btn {
+                background: linear-gradient(45deg, #28a745, #20c997);
+                box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
+            }
+            
+            .login-btn.admin-btn:hover {
+                box-shadow: 0 12px 35px rgba(40, 167, 69, 0.4);
+            }
+            
+            .floating-elements {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+                pointer-events: none;
+            }
+            
+            .floating-elements::before,
+            .floating-elements::after {
+                content: '';
+                position: absolute;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.1);
+                animation: float 6s ease-in-out infinite;
+            }
+            
+            .floating-elements::before {
+                width: 100px;
+                height: 100px;
+                top: 20%;
+                left: 10%;
+                animation-delay: 0s;
+            }
+            
+            .floating-elements::after {
+                width: 60px;
+                height: 60px;
+                top: 60%;
+                right: 15%;
+                animation-delay: 3s;
+            }
+            
+            @keyframes float {
+                0%, 100% { transform: translateY(0px); }
+                50% { transform: translateY(-20px); }
+            }
+            
+            .feature-icons {
+                display: flex;
+                justify-content: center;
+                gap: 30px;
+                margin: 30px 0;
+                flex-wrap: wrap;
+            }
+            
+            .feature-icon {
+                font-size: 2rem;
+                color: #667eea;
+                animation: pulse 2s infinite;
+            }
+            
+            @keyframes pulse {
+                0%, 100% { opacity: 0.7; transform: scale(1); }
+                50% { opacity: 1; transform: scale(1.1); }
+            }
+            
+            @media (max-width: 768px) {
+                .welcome-container {
+                    padding: 30px 20px;
+                    margin: 10px;
+                }
+                
+                .welcome-title {
+                    font-size: 2.2rem;
+                }
+                
+                .login-options {
+                    flex-direction: column;
+                    align-items: center;
+                }
+                
+                .login-btn {
+                    width: 200px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="hero-section">
+            <div class="floating-elements"></div>
+            
+            <div class="welcome-container fade-in">
+                <div class="quiz-icon">🎓</div>
+                <h1 class="welcome-title">Quiz Master</h1>
+                <p class="welcome-subtitle">
+                    Welcome to the ultimate quiz platform! Test your knowledge, 
+                    challenge yourself, and track your progress with our comprehensive quiz system.
+                </p>
+                
+                <div class="feature-icons">
+                    <span class="feature-icon" title="Interactive Quizzes">📝</span>
+                    <span class="feature-icon" title="Progress Tracking">📊</span>
+                    <span class="feature-icon" title="Multiple Subjects">📚</span>
+                    <span class="feature-icon" title="Real-time Results">⚡</span>
+                </div>
+                
+                <h5 style="color: #666; margin-bottom: 30px; font-weight: 500;">
+                    Choose your login type to get started
+                </h5>
+                
+                <div class="login-options">
+                    <a href="login" class="login-btn">
+                        👤 Student Login
+                    </a> 
+                    <a href="admin_login" class="login-btn admin-btn">
+                        🔧 Admin Login
+                    </a>  
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

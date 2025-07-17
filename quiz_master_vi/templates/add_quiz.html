@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register new quiz</title>
+</head>
+<body>
+    <h2>Register New Quiz</h2>
+    
+    <form action="add_quiz" method="POST">
+        <label>quiz_date:</label>
+        <input type="date" name="quiz_date" required><br><br>
+
+        <label>duration:</label>
+        <textarea name="duration"></textarea><br><br>
+
+        <label>Select_chapter:</label> 
+        <select name="select_chapter" required>
+            <option value="">-- select_chapter --</option>
+            {% for chapter in Chapters %}
+                <option value="{{ chapter.chaoter_id }}">{{ chapter.chapter_name }}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <button type="submit">register new quiz</button>
+    </form>
+
+    <h3>Available chapters</h3>
+    <ul>
+        {% for chapter in Chapters %}
+            <li>{{ chapter.chaoter_id }} - {{ chapter.chapter_name}}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Quiz</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Edit Quiz</h2>
+        <form action="/edit_quiz/{{ quiz.quizid }}" method="POST">
+            <div class="mb-3">
+                <label for="quiz_date" class="form-label">Quiz Date:</label>
+                <input type="date" class="form-control" id="quiz_date" name="quiz_date" value="{{ quiz.quiz_date }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="duration" class="form-label">Duration (minutes):</label>
+                <input type="number" class="form-control" id="duration" name="duration" value="{{ quiz.duration }}" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+            <a href="/admin_dashboard" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</body>
+</html>

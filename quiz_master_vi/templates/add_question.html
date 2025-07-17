@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>add new question</title>
+        <link rel="stylesheet" href="/static/style.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    </head>
+    <body>
+        <br>
+        {{warningg}}
+        <div id="canvas">
+          <h4>{{option4}} the Question</h4>
+          <form action="{{option5}}add_question{% if option5 != 'add' %}{{ question_id }}{% endif %}" method="POST" class="cl3">
+              <label>Enter the Question:</label><br>
+              <textarea name="question_text" required>{{question_text}}</textarea>
+              
+              <label>Select the Chapter ID:</label>
+              <select name="chapter_id" required>
+                  <option value="">Choose the Chapter</option>
+                  {% for chapter in chapters %}
+                  <option value="{{chapter.chaoter_id}}" {% if chapter.chaoter_id ==chapter_id %} selected {% endif %}>{{chapter.chapter_name}} (ID: {{chapter.chaoter_id}})</option>
+                  {% endfor %}
+              </select><br> {% if options %}
+              {% for idx, option in enumerate(options, start=1) %}
+              <label for="option{{ option.option_id }}">Option {{ idx }}:</label>
+              <input type="text" name="option{{ idx }}" id="option{{ option.option_id }}"  required value="{{ option['option'] }}"><br>
+          {% endfor %}
+          
+          {% else %}
+          <label>Option 1:</label>
+          <input type="text" name="option1" required > <br>
+          
+          <label>Option 2:</label>
+          <input type="text" name="option2" required ><br>
+          
+          <label>Option 3:</label>
+          <input type="text" name="option3" required><br>
+          
+          <label>Option 4:</label>
+          <input type="text" name="option4" required >
+          {% endif %}
+          
+              <br>
+              <label>Select the Correct Option (1-4):</label>
+              <input type="number" name="correct_option" min="1" max="4" required>
+              
+              <div class="buttons"><button type="submit">Submit</button></div>
+          </form>
+      </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+      </body>
+      </html>

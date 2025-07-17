@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>scores</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <h5 style="text-align:center">Admin Dashboard<h5>
+  </head>
+  <header>
+    <div id="canvas">
+      <div class="container">
+        <div class="card text-center">
+          <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs">
+              <li class="nav-item">
+                <a class="nav-link" href="/adminhome">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/quiz">Quiz</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/chapters">Chapters</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/questions">Questions</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/logout">logout</a>
+            </li>
+              <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Student Details
+                </button>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="student_personal_details.html">Personal Details</a></li>
+                </ul>
+                
+              </div>
+              <form class="admin-search" action="{{ url_for('admin_search') }}" method="GET">
+                <input type="text" name="query" placeholder="Search...">
+                <select name="type">
+                  <option value="users">Users</option>
+                  <option value="subjects">Subjects</option>
+                  <option value="quizzes">Quizzes</option>
+                  <option value="questions">Questions</option>
+                </select>
+                <button type="submit">Search</button>
+              </form>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <body>
+    <br>
+    <div class="main">
+      <table style="width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 18px; text-align: left;">
+        <thead>
+            <tr style="background-color: #f2f2f2; border-bottom: 2px solid #ddd;">
+                <th style="padding: 12px; border: 1px solid #ddd;">ID</th>
+                <th style="padding: 12px; border: 1px solid #ddd;">Subject Name</th>
+                <th style="padding: 12px; border: 1px solid #ddd;">Description</th>
+                <th style="padding: 12px; border: 1px solid #ddd;">Chapters</th>
+                <th style="padding: 12px; border: 1px solid #ddd;">Actions</th>
+                <th style="padding: 12px; border: 1px solid #ddd;">Subject action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for subject in subjects %}
+            <tr style="border-bottom: 1px solid #ddd;">
+                <td style="padding: 12px; border: 1px solid #ddd;">{{ subject.subject_id }}</td>
+                <td style="padding: 12px; border: 1px solid #ddd;">{{ subject.subject_name }}</td>
+                <td style="padding: 12px; border: 1px solid #ddd;">{{ subject.description }}</td>
+                <td style="padding: 12px; border: 1px solid #ddd;">
+                    <ul style="padding-left: 15px; margin: 0;">
+                       {% for chapter in subject.chapters %}
+                        <li>{{ chapter.chapter_name }}
+                            <a href="/edit_chapter/{{ chapter.chaoter_id }}" class="btn btn-sm btn-primary">Edit{{entity}}details</a>
+                            <a href="/delete_chapter/{{ chapter.chaoter_id }}" class="btn btn-sm btn-danger">Delete</a>
+                        </li>
+                        {% else %}
+                        <li>No chapters added yet.</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+                <td style="padding: 12px; border: 1px solid #ddd;">
+                    <a href="/add_chapter" class="btn btn-sm btn-success">+ Add Chapter</a>
+                </td>
+                <td style="padding:12px;border:1px solid #ddd;">
+                  <li>{{subject.subject_name}}
+                    <a href="/edit_subject/{{subject.subject_id}}" class="btn btn-sm btn-primary">Edit subject</a>
+                    <a href="/delete_subject/{{subject.subject_id}}" class='btn'>delete subject</a>
+                  </li>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+
+      <a href="add_subject" class="btn btn-success">+ Add New Subject</a>
+      
+      
+                <a href="/upload_questions" class="btn btn-success">Upload Questions from File</a>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    </div>
+  </body>
+</html>
